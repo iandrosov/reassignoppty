@@ -1,0 +1,63 @@
+<apex:page controller="OpportunityReassignCtrl" tabStyle="Opportunity">
+
+    <apex:form >
+    
+        <apex:pageBlock title="Filter Opportunity" id="filter">
+            <apex:pageblockSection columns="4">
+                <apex:inputField id="filterid" value="{!opptyFilter.OwnerId}" required="false"/>
+                <apex:commandButton value="Filter" action="{!filterOpportunity}" />
+            </apex:pageblockSection>
+		</apex:pageBlock>
+        <apex:pageBlock title="Reassign Opportunity [Selected: {!selectCount}]" id="selectcounter">
+            <apex:pageblockSection columns="4">
+                <apex:inputField id="ownerid" value="{!opportunity.OwnerId}" required="false"/>    
+                <apex:commandButton value="Reassign" action="{!assignOpportunity}" />
+                <apex:commandButton action="{!cancel}" value="Cancel" />
+            </apex:pageblockSection>
+        </apex:pageBlock>
+ 
+        <apex:pageBlock id="opportunitylist" title="Opportunities">
+          <apex:outputPanel id="myOpportunityList">
+            <apex:pageMessages />
+            <apex:pageBlockTable value="{!opportunityList}" var="opty">
+                
+                <apex:column >
+                    <apex:facet name="header">
+                        <c:CheckAllOrNone />
+                    </apex:facet>                     
+                    <apex:inputCheckbox value="{!opty.checked}" >
+                    	<apex:actionsupport event="onchange" rerender="selectcounter" />  
+                    </apex:inputCheckbox>
+                </apex:column>
+ 
+                <apex:column value="{!opty.name}" headerValue="OPPORTUNITY NAME"/>                          
+                <apex:column value="{!opty.oppty.Status__c}" headerValue="STATUS"/>
+                <apex:column value="{!opty.oppty.University_Name__c}" headerValue="UNIVERSITY"/>
+                <apex:column value="{!opty.oppty.Order_Hold__c}" headerValue="ORDER HOLD"/>
+                <apex:column value="{!opty.oppty.Program_Type__c}" headerValue="PROGRAM"/>
+                <apex:column value="{!opty.oppty.Owner.FirstName} {!opty.oppty.Owner.LastName}" headerValue="OWNER FULL NAME"/>
+                <apex:column >
+                    <apex:facet name="header">
+                        CREATED DATE
+                    </apex:facet>
+                    <apex:outputText value="{0,date,yyyy-MM-dd}">
+       					<apex:param value="{!opty.oppty.CreatedDate}" />
+   					</apex:outputText>
+                </apex:column>
+
+                <apex:column value="{!opty.oppty.LastModifiedDate}" headerValue="LAST MODIFIED"/>
+            </apex:pageBlockTable>
+          </apex:outputPanel>
+             
+        </apex:pageBlock>
+
+        <apex:panelGrid columns="4" id="pagecontrol">
+    		<apex:commandLink action="{!first}">First</apex:commandlink>
+    		<apex:commandLink action="{!previous}" rendered="{!hasPrevious}" >Previous</apex:commandlink>
+    		<apex:commandLink action="{!next}" rendered="{!hasNext}" >Next</apex:commandlink>
+    		<apex:commandLink action="{!last}" >Last</apex:commandlink>
+    	</apex:panelGrid>
+
+    </apex:form>
+    
+</apex:page>
